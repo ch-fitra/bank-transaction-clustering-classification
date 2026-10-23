@@ -1,0 +1,5 @@
+PASTE PESAN INI KE CODEX SETELAH MEMBUKA FOLDER DI VS CODE:
+
+"Baca AGENTS.md dan PROMPT_CODEX.md secara lengkap. Laksanakan SEMUA fase A-H sekarang, bukan hanya memberi rencana. Gunakan dua notebook resmi di root yang sudah terisi sebagai titik awal, dataset resmi dan template di folder templates/ sebagai acuan; siapkan Python 3.11 virtualenv, scikit-learn 1.7.0, Yellowbrick asli, audit dan perbaiki sesuai 5 kriteria Advanced. Jalankan seluruh cell Clustering lalu Classification dari kernel bersih, simpan output, buat dan periksa semua model/CSV, kemudian jalankan scripts/validate_and_package.py. Berikan file submission/BMLP_Chairul_Fitra_Ramadhan.zip beserta laporan bukti QA. Jangan mengubah aturan template, jangan menggunakan AutoML/GPU alternatif, jangan mengklaim fraud detection, jangan mengunggah submission atas nama saya. Jangan berhenti sebelum seluruh berkas siap upload; laporkan blocker nyata bila ada."
+
+PENTING: CODEx MEMBACA PROMPT_CODEX.md YANG LEBIH LENGKAP (21 KB) DI DALAM FOLDER.
