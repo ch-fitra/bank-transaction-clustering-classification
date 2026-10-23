@@ -1,49 +1,33 @@
-# Bank Transaction Clustering & Classification — Dicoding BMLP
+﻿# Bank Transaction Clustering & Classification — Dicoding Submission
 
-Proyek submission Dicoding dengan dataset resmi transaksi bank: K-Means clustering menghasilkan **pseudo-label `Target`**, kemudian Decision Tree dan Random Forest mengklasifikasikan pseudo-label tersebut. **Bukan model fraud detection tervalidasi**.
+Branch ini menyimpan versi submission Dicoding sebelum perapian proyek menjadi portofolio pribadi. Versi portofolio berada di [branch main](https://github.com/ch-fitra/bank-transaction-clustering-classification/tree/main).
 
-## Mulai di VS Code (Windows / PowerShell)
+## Berkas final
 
-1. Ekstrak ZIP starter dan buka folder `Bank-Transaction-Clustering-Classification` pada VS Code.
-2. Baca **`PROMPT_CODEX.md`** lalu gunakan isi file itu sebagai instruksi Codex, atau kirim pesan: `Baca AGENTS.md dan PROMPT_CODEX.md lalu eksekusi seluruh tugas sampai submission ZIP siap. Jangan berhenti di rencana.`
-3. Pasang ekstensi Microsoft `Python` dan `Jupyter` pada VS Code.
-4. Jalankan PowerShell:
+Gunakan `submission/BMLP_Chairul_Fitra_Ramadhan.zip` untuk submission. ZIP berisi tepat sembilan berkas: dua notebook dengan output, dua CSV hasil clustering, dan lima model joblib. Ekstensi model `.h5` mengikuti penamaan submission; format serialisasinya tetap joblib.
+
+Notebook kerja di root mempertahankan struktur template asli. Dataset input adalah `bank_transactions_data_edited.csv`; template referensi berada di `templates/`. `QA_REPORT.md` memuat audit hasil dan batasan metode. Prompt dan instruksi untuk asisten AI tidak disertakan dalam versi branch ini.
+
+## Menjalankan ulang di Windows
+
+Gunakan Python 3.11 dan jalankan dari root proyek:
 
 ```powershell
 py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -c "import sklearn, yellowbrick; print(sklearn.__version__)"
+.\.venv\Scripts\python.exe -m pip install -r requirements.lock.txt
+.\.venv\Scripts\python.exe scripts/run_notebooks.py
+.\.venv\Scripts\python.exe scripts/validate_and_package.py
 ```
 
-5. Pilih Jupyter kernel `.venv` ketika membuka `.ipynb`. Code notebook memakai URL publik Google Sheets yang sudah ada dalam template resmi; internet dibutuhkan kecuali codex membuat fallback yang benar dan portabel.
-6. Sesudah Codex audit/perbaiki notebook, eksekusi keduanya secara berurutan dari root (bisa klik **Run All** di VS Code, atau gunakan skrip di bawah):
+Skrip menjalankan Clustering terlebih dahulu, kemudian Klasifikasi dari kernel bersih menggunakan interpreter yang menjalankannya. Setelah notebook selesai, validator memeriksa artefak dan membuat ulang ZIP. Notebook clustering menggunakan URL publik dataset yang tercantum pada template sehingga memerlukan koneksi internet.
 
-```powershell
-.\.venv\Scripts\python.exe scripts\run_notebooks.py
-.\.venv\Scripts\python.exe scripts\validate_and_package.py
-```
+Environment hasil terverifikasi: Python 3.11.9, scikit-learn 1.7.0, dan Yellowbrick 1.5 asli. Model dijalankan pada CPU. `.venv`, cache, model root hasil run, dan manifest eksekusi lokal dikecualikan dari Git; ZIP final sudah mencakup kelima model.
 
-7. Bila selesai dan hasil valid, **upload `submission/BMLP_Chairul_Fitra_Ramadhan.zip`** ke Dicoding. Tidak perlu upload seluruh folder starter.
+## Hasil dan batasan
 
-## Struktur
+- Data akhir: 1.945 transaksi, 10 fitur dan satu kolom Target.
+- K-Means: dua cluster beranggotakan 980 dan 965 transaksi; silhouette 0,572160.
+- Decision Tree, Random Forest, dan tuned Decision Tree: accuracy, precision weighted, recall weighted, dan F1 weighted sebesar 1,0000 pada 389 sampel test.
+- CV tuning dilakukan pada train saja; best F1 weighted 0,996141. Tuning tidak meningkatkan skor test.
 
-- `PROMPT_CODEX.md`: instruksi utama sangat rinci untuk Codex.
-- `AGENTS.md`: petunjuk permanen proyek yang otomatis dapat dibaca Codex.
-- `*.ipynb` di root: notebook kerja yang sebelumnya sudah diisi; harus diaudit/rerun dalam versi dependency target.
-- `templates/`: notebook resmi Dicoding tanpa modifikasi, sebagai perbandingan struktur.
-- `bank_transactions_data_edited.csv`: sumber data resmi untuk audit dan fallback lokal.
-- `scripts/run_notebooks.py`: mengeksekusi notebook Clustering lalu Klasifikasi dengan working directory root.
-- `scripts/validate_and_package.py`: QA berkas dan membuat ZIP final.
-- `submission/`: keluaran final berisi 9 berkas + ZIP.
-
-Jangan mengandalkan GPU NVIDIA: algoritma scikit-learn yang diwajibkan berjalan di CPU.
-
-
-## Hasil terverifikasi
-
-Run final menggunakan Python 3.11.9 dalam `.venv`, scikit-learn 1.7.0 dan Yellowbrick 1.5 asli. Semua cell kedua notebook dieksekusi berurutan dari kernel bersih, lalu validator packaging lolos. ZIP final berada di `submission/BMLP_Chairul_Fitra_Ramadhan.zip`.
-
-Lihat `QA_REPORT.md` untuk bukti tiap kriteria, metrik test, audit grafik, perbedaan penamaan tanggal antara CSV lokal dan URL resmi, serta batasan pseudo-label. Snapshot dependency ada di `requirements.lock.txt`; manifest hash dan waktu eksekusi ada di `scripts/last_execution.json`. Laporan dan tools ini tidak masuk ZIP.
-
-Untuk mengulang environment persis: `.\.venv\Scripts\python.exe -m pip install -r requirements.lock.txt`. Untuk memilih kernel di VS Code tersedia `Python 3.11 (.venv BMLP)`; skrip eksekusi selalu mengunci interpreter ke Python yang menjalankannya.
+Target merupakan pseudo-label K-Means, bukan label fraud asli. Hasil clustering terutama dipengaruhi kode ordinal Location; preprocessing dan pembentukan cluster memakai keseluruhan data sebelum split classifier. Skor klasifikasi mengukur reproduksi partisi tersebut, bukan bukti keberhasilan mendeteksi penipuan.
